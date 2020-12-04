@@ -1,0 +1,27 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-universal-links-plugin": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    }
+  },
+  "dependent_plugins": {}
+}

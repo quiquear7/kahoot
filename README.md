@@ -1,2 +1,2 @@
-# kahoot
+# Kahoot
  kahoot

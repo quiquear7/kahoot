@@ -1,0 +1,39 @@
+#page_login{
+    display:block;
+
+}
+
+#page_main, #page_add_task{
+    display:none;
+
+}
+
+.fab{
+    position: absolute;
+    z-index: 9999;
+    font-size: 32px;
+    color: white;
+    background-color: #4caf50;
+    border-radius: 32px;
+    width:  64px;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+
+}
+
+.bottom-right{
+    bottom: 15px;
+    right:  15px;
+}
+
+.imagen{
+    width:100px;
+    height:100px;
+}
+
+.imagentask{
+     display:none;
+    width:60px;
+    height:60px;
+}
