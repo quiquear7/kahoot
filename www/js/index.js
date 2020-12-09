@@ -21,7 +21,7 @@ document.addEventListener('deviceready',function(){
 
 	document.querySelector('#btn_add_task').addEventListener('click',function(){
 		document.querySelector('#page_add_game').style.display = 'block';
-		document.querySelector('#preguntas').style.display = 'block';
+		document.querySelector('#preguntas').style.display = 'none';
 		document.querySelector('#page_main').style.display = 'none';
 	});
 
@@ -43,6 +43,7 @@ document.addEventListener('deviceready',function(){
 		}
 
 		document.querySelector('#page_add_game').style.display = 'none';
+		document.querySelector('#preguntas').style.display = 'none';
 		document.querySelector('#page_main').style.display = 'block';
 		document.querySelector("#game_name").value = "";
 	});
@@ -100,7 +101,7 @@ document.addEventListener('deviceready',function(){
 		el.innerHTML += "<label for=\"question\">Pregunta </label>";
 		el.innerHTML += "<input type=\"text\" id=\"question\" name=\"question\" />";
 */
-
+	
 		let pid = id;
 		el.innerHTML+="<button id='"+pid+"' class='p' > Añadir Preguta </button>";
 		page_main.appendChild(el);
