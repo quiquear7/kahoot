@@ -35,7 +35,7 @@ BuildInfoProxy = {
 
         try {
             /* <EMBED_CODE> */
-            const json = {"debug":true,"buildDate":"2020-12-04T10:34:56.871Z","packageName":"es.uc3m.ubicomp.kahoot","basePackageName":"es.uc3m.ubicomp.kahoot","name":"Kahoot","displayName":"Kahoot","version":"1.0.0","versionCode":"1.0.0"};
+            const json = {"debug":true,"buildDate":"2020-12-09T10:55:33.386Z","packageName":"es.uc3m.ubicomp.kahoot","basePackageName":"es.uc3m.ubicomp.kahoot","name":"Kahoot","displayName":"Kahoot","version":"1.0.0","versionCode":"1.0.0"};
             /* </EMBED_CODE> */
 
             var ret = {

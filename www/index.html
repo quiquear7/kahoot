@@ -8,13 +8,13 @@
           https://*.gstatic.com
           https://*.googleapis.com
           https://apis.google.com
-          https://ubitareasapp-295113.firebaseapp.com
           https://*.firebaseio.com
           https://www.googletagmanager.com
           http://www.googletagmanager.com
           https://www.google-analytics.com/
+          https://kahootapp.firebaseapp.com/
           'unsafe-inline';
-       
+
         style-src
           'self'
           'unsafe-inline';
@@ -25,11 +25,11 @@
           file://www.googletagmanager.com
           https://*.googleusercontent.com
           data: content:;">
-        
+
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        
+
         <link rel="stylesheet" href="css/index.css">
         <link  rel="icon"   href="" type="image/png" />
         <title>UbiTareasApp</title>
@@ -37,15 +37,40 @@
     <body>
         <div id="page_login">
             <button id="btn_google_login">Acceder con Google</button>
-        </div> 
-       
+        </div>
+
+        <div id="page_main">
+            <h1>Lista de Juegos:</h1>
+            <button id="btn_add_task" class="fab bottom-right"> + </button>
+        </div>
+
+        <div id="page_add_game">
+           <div>
+             <label for="game_name">Nombre del juego </label>
+             <input type="text" id="game_name" name="game_name" />
+           </div>
+
+           <br></br>
+
+            <br></br>
+             <br></br>
+           <button id="btn_cancel">Cancelar</button>
+           <button id="btn_done_add">Añadir</button>
+        </div>
+        <div id=preguntas>
+          <label for="question">Pregunta </label>
+          <input type="text" id="question" name="question" />
+          <div id="preguntas_btn">
+            
+          </div>
+        </div>
         <script src="cordova.js"></script>
 
-               
+
         <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
-   
+
         <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
 
         <script>
