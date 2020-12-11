@@ -21,6 +21,9 @@
     },
     "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-plugin-qrcodejs": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
     }
   },
   "dependent_plugins": {},
@@ -70,6 +73,26 @@
       "id": "cordova-plugin-inappbrowser.InAppBrowserProxy",
       "pluginId": "cordova-plugin-inappbrowser",
       "runs": true
+    },
+    {
+      "file": "plugins/cordova-plugin-qrcodejs/www/qrcodejsPlugin.js",
+      "id": "cordova-plugin-qrcodejs.QRCodeJS",
+      "pluginId": "cordova-plugin-qrcodejs",
+      "clobbers": [
+        "cordova.plugins.qrcodejs"
+      ]
+    },
+    {
+      "file": "plugins/cordova-plugin-qrcodejs/www/qrcode.js",
+      "id": "cordova-plugin-qrcodejs.QRCcodeJSImpl",
+      "pluginId": "cordova-plugin-qrcodejs",
+      "runs": true
+    },
+    {
+      "file": "plugins/cordova-plugin-qrcodejs/www/qrcodejsPluginProxy.js",
+      "id": "cordova-plugin-qrcodejs.QRCcodeJSProxy",
+      "pluginId": "cordova-plugin-qrcodejs",
+      "runs": true
     }
   ],
   "plugin_metadata": {
@@ -77,6 +100,7 @@
     "cordova-plugin-buildinfo": "4.0.0",
     "cordova-universal-links-plugin": "1.2.1",
     "cordova-plugin-browsertab": "0.2.0",
-    "cordova-plugin-inappbrowser": "4.1.0"
+    "cordova-plugin-inappbrowser": "4.1.0",
+    "cordova-plugin-qrcodejs": "1.0.0"
   }
 }

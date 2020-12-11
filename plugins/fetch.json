@@ -38,5 +38,13 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-plugin-qrcodejs": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/MenelicSoftware/cordova-plugin-qrcodejs"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

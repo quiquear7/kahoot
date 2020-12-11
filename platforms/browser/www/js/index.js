@@ -30,7 +30,7 @@ document.addEventListener('deviceready',function(){
 	document.querySelector('#btn_done_add').addEventListener('click',function(){
 		//var juegos_ref = db.ref("/juegos");
 		var task_name = document.querySelector("#game_name").value;
-	//	var image = document.getElementById('imagen');
+	//	var image = document.getElementById('file').value;
 		if(refmod==null){
 
 			firebase.database().ref("/juegos/"+ref).set(
@@ -52,15 +52,51 @@ document.addEventListener('deviceready',function(){
 		let identificador = id.split("p");
 		//var juegos_ref = db.ref("/juegos");
 		var task_name = document.querySelector("#question").value;
+		var file = document.getElementById("file").files[0];
+  	var reader = new FileReader();
+  	reader.onload = function(event) {
+    var img = document.getElementById('img');
+    img.src= event.target.result;
+  	}
+  	reader.readAsDataURL(file);
+
+
+		var opcionA = document.querySelector("#opcion_a").value;
+		var opcionB = document.querySelector("#opcion_b").value;
+		var opcionC = document.querySelector("#opcion_c").value;
+		var opcionD = document.querySelector("#opcion_d").value;
+
+		var check = document.querySelectorAll('.checkbox');//obtenemos botone done
+		let respuesta = new Array();
+		for(var i = 0; i < check.length; i++) {
+			if (check[i].checked){
+				if(i==2 && opcionC!="" || i==3 && opcionD!="" || i==0 || i==1) {
+					respuesta.push(i);
+				}
+			}
+		}
+
 	//	var image = document.getElementById('imagen');
 		if(refmod==null){
 
 			firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name).set(
 			{
 				juego: identificador[1],
-				pregunta:task_name
+				pregunta:task_name,
+				respuesta: respuesta,
+				imagen: img
 			});
 		}
+
+		firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name+"/opciones").set(
+		{
+			opcion_a: opcionA,
+			opcion_b: opcionB,
+			opcion_c: opcionC,
+			opcion_d: opcionD
+		});
+
+
 
 		document.querySelector('#preguntas').style.display = 'none';
 		document.querySelector('#page_main').style.display = 'block';
@@ -101,7 +137,7 @@ document.addEventListener('deviceready',function(){
 		el.innerHTML += "<label for=\"question\">Pregunta </label>";
 		el.innerHTML += "<input type=\"text\" id=\"question\" name=\"question\" />";
 */
-	
+
 		let pid = id;
 		el.innerHTML+="<button id='"+pid+"' class='p' > Añadir Preguta </button>";
 		page_main.appendChild(el);
@@ -113,10 +149,21 @@ document.addEventListener('deviceready',function(){
 
 	function Empezar(id){
 		let refremove = id.split("e");
-		console.log(refremove);
-		var juegos_ref = db.ref("/juegos/"+id[1]);
-		firebase.database().ref(refremove[1]).remove();
-		document.getElementById(refremove[1]).style.display = 'none';
+		let identificador = refremove[1];
+
+		cordova.plugins.qrcodejs.encode('TEXT_TYPE', identificador, (base64EncodedQRImage) => {
+			const qr = document.querySelector('#qr');
+			qr.innerHTML="";
+			let el = document.createElement('p');
+			el.innerHTML += "<img class=imagen src='"+base64EncodedQRImage+"'/>";
+			qr.appendChild(el);
+      console.info('QRCodeJS response is ' + base64EncodedQRImage);
+      //TODO: use your base64EncodedQRImage
+    }, (err) => {
+      console.error('QRCodeJS error is ' + JSON.stringify(err));
+    });
+
+
 	}
 
 	function removeTask(id){
@@ -171,6 +218,10 @@ document.addEventListener('deviceready',function(){
 			var bp = document.querySelectorAll('.bp');//obtenemos botone done
   		for(var i = 0; i < bp.length; i++) {
    			bp[i].addEventListener('click', manejadorPregunta);//cauturamos el evento click
+  		}
+			var e = document.querySelectorAll('.bempezar');//obtenemos botone done
+  		for(var i = 0; i < e.length; i++) {
+   			e[i].addEventListener('click', manejadorEmpezar);//cauturamos el evento click
   		}
 	}
 
@@ -229,14 +280,11 @@ document.addEventListener('deviceready',function(){
 				document.querySelector('#page_login').style.display = 'none';
 				document.querySelector('#page_main').style.display = 'block';
 				user = result.user;
-
 				db = firebase.database();
-			/*	db.ref("/profesores/"+ref_prof).set(
+				db.ref("/profesores/"+user.uid).set(
 				{
-					name: user.email,
-					referencia: ref_prof
+					name: user.email
 				});
-				ref_prof = ref_prof++;*/
 				let juegos_ref = db.ref("/juegos");
 
 				//const page_main_foto = document.querySelector('#page_main_foto');

@@ -45,6 +45,26 @@ module.exports = [
         "id": "cordova-plugin-inappbrowser.InAppBrowserProxy",
         "pluginId": "cordova-plugin-inappbrowser",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-qrcodejs/www/qrcodejsPlugin.js",
+        "id": "cordova-plugin-qrcodejs.QRCodeJS",
+        "pluginId": "cordova-plugin-qrcodejs",
+        "clobbers": [
+            "cordova.plugins.qrcodejs"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-qrcodejs/www/qrcode.js",
+        "id": "cordova-plugin-qrcodejs.QRCcodeJSImpl",
+        "pluginId": "cordova-plugin-qrcodejs",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-qrcodejs/www/qrcodejsPluginProxy.js",
+        "id": "cordova-plugin-qrcodejs.QRCcodeJSProxy",
+        "pluginId": "cordova-plugin-qrcodejs",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -54,7 +74,8 @@ module.exports.metadata =
     "cordova-plugin-buildinfo": "4.0.0",
     "cordova-universal-links-plugin": "1.2.1",
     "cordova-plugin-browsertab": "0.2.0",
-    "cordova-plugin-inappbrowser": "4.1.0"
+    "cordova-plugin-inappbrowser": "4.1.0",
+    "cordova-plugin-qrcodejs": "1.0.0"
 }
 // BOTTOM OF METADATA
 });

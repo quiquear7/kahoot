@@ -21,6 +21,9 @@
     },
     "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
+    },
+    "cordova-plugin-qrcodejs": {
+      "PACKAGE_NAME": "es.uc3m.ubicomp.kahoot"
     }
   },
   "dependent_plugins": {}
