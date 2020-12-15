@@ -95,7 +95,7 @@ document.addEventListener('deviceready',function(){
 
 	//	var image = document.getElementById('imagen');
 		const input = document.getElementById('file');
-   		reader.readAsDataURL(input.files[0]);
+   		
        
     	if(tipo_pregunta!="" && task_name !="" && respuesta.length > 0){
     		if(refmod==null){
@@ -123,6 +123,7 @@ document.addEventListener('deviceready',function(){
 		document.querySelector('#page_main').style.display = 'block';
     	}
     	else{
+    		alert("Datos incorrectos");
     		document.querySelector('#preguntas').style.display = 'block';
 			document.querySelector('#page_main').style.display = 'none';
 			document.querySelector("#question").value = '';
@@ -206,7 +207,6 @@ document.addEventListener('deviceready',function(){
 			jugadores_ref.on('child_changed',jugadores);
     
     }, (err) => {
-      console.error('QRCodeJS error is ' + JSON.stringify(err));
     });
 
 
