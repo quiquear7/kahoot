@@ -170,12 +170,23 @@ document.addEventListener('deviceready',function(){
 		let pid = id;
 		el.innerHTML += "<br>"
 		el.innerHTML+="<button id='"+pid+"' class='p mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Añadir Pregunta </button>";
+		el.innerHTML += "<button id='cancelarpr' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Cancelar </button>";
+
+
+			
 		page_main.appendChild(el);
 		var p = document.querySelectorAll('.p');//obtenemos botone done
 		document.querySelector('#page_main').style.display = 'none';
 		for(var i = 0; i < p.length; i++) {
 			p[i].addEventListener('click', añadirPregunta);//cauturamos el evento click
 		}
+
+		document.querySelector('#cancelarpr').addEventListener('click',function(){
+				
+				document.querySelector('#page_main').style.display = 'block';
+				document.querySelector('#preguntas').style.display = 'none';
+
+			});
 	}
 
 	function Empezar(id){
