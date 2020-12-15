@@ -7,7 +7,8 @@ document.addEventListener('deviceready',function(){
 	let ref_prof = 0;
 	let refmod = null;
 	let tipo_pregunta = "";
-
+	let tiempo = null;
+	let preguntasarr = new Array();
 	getRedirectResult();
 	document.querySelector('#btn_google_login').addEventListener('click',function(){
 		const provider = new firebase.auth.GoogleAuthProvider();
@@ -39,7 +40,9 @@ document.addEventListener('deviceready',function(){
 			{
     		user:user.email,
 				name:task_name,
-				referencia: ref
+				referencia: ref,
+				iniciado: 0
+
 			});
 			ref = ref++;
 		}
@@ -62,7 +65,9 @@ document.addEventListener('deviceready',function(){
   	}
   	reader.readAsDataURL(file);
 
-*/		let respuesta = new Array();
+*/	let respuesta = new Array();
+		let puntos = null;
+		let espunto = 1;
 		if(tipo_pregunta=="opciones"){
 
 			var opcionA = document.querySelector("#opcion_a").value;
@@ -70,8 +75,16 @@ document.addEventListener('deviceready',function(){
 			var opcionC = document.querySelector("#opcion_c").value;
 			var opcionD = document.querySelector("#opcion_d").value;
 
+		if (opcionA!="" && opcionB !=""){
+			puntos = document.getElementById('puntoopcion').value;
+			if(isNaN(parseInt(puntos))){
+				espunto = 0;
+			}
+		}
+
+
 		var check = document.querySelectorAll('.checkbox');//obtenemos botone done
-		
+
 			for(var i = 0; i < check.length; i++) {
 				if (check[i].checked){
 					if(i==2 && opcionC!="" || i==3 && opcionD!="" || i==0 || i==1) {
@@ -82,30 +95,41 @@ document.addEventListener('deviceready',function(){
 		}
 
 		if(tipo_pregunta=="si_no"){
-		radio
+
 		var radio = document.querySelectorAll('.radio'); //obtenemos bootnes remove
   		for(var i = 0; i < radio.length; i++) {
    			if(radio[i].checked){
    				respuesta.push(radio[i].value);
+					puntos = document.getElementById('puntoradio').value;
+					if(isNaN(parseInt(puntos))){
+						espunto = 0;
+					}
 
    			}
   		}
-    		
+
     	}
+
 
 	//	var image = document.getElementById('imagen');
 		const input = document.getElementById('file');
-   		
-       
-    	if(tipo_pregunta!="" && task_name !="" && respuesta.length > 0){
+		let tiempo = document.getElementById('tiempopregunta').value;
+		let esnumero = 1;
+		if(isNaN(parseInt(tiempo))){
+			esnumero = 0;
+		}
+
+    	if(tipo_pregunta!="" && task_name !="" && respuesta.length > 0 && esnumero ==1 && espunto==1 ){
     		if(refmod==null){
 
 			firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name).set(
 			{
 				juego: identificador[1],
 				tipo: tipo_pregunta,
+				tiempo: tiempo,
+				puntos: puntos,
 				pregunta:task_name,
-				respuesta: respuesta,
+				respuesta: respuesta
 				//imagen: reader.result
 			});
 		}
@@ -134,7 +158,7 @@ document.addEventListener('deviceready',function(){
 			document.querySelector("#opcion_d").value = '';
     	}
 
-		
+
 	}
 
 	function manejadorRemove(event) {
@@ -170,11 +194,10 @@ document.addEventListener('deviceready',function(){
 		let pid = id;
 		el.innerHTML += "<br>"
 		el.innerHTML+="<button id='"+pid+"' class='p mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Añadir Pregunta </button>";
-		el.innerHTML += "<br>";
 		el.innerHTML += "<button id='cancelarpr' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Cancelar </button>";
 
 
-			
+
 		page_main.appendChild(el);
 		var p = document.querySelectorAll('.p');//obtenemos botone done
 		document.querySelector('#page_main').style.display = 'none';
@@ -183,11 +206,9 @@ document.addEventListener('deviceready',function(){
 		}
 
 		document.querySelector('#cancelarpr').addEventListener('click',function(){
-				
-				document.querySelector('#page_main').style.display = 'block';
-				document.querySelector('#preguntas').style.display = 'none';
-
-			});
+			document.querySelector('#page_main').style.display = 'block';
+			document.querySelector('#preguntas').style.display = 'none';
+		});
 	}
 
 	function Empezar(id){
@@ -197,45 +218,169 @@ document.addEventListener('deviceready',function(){
 		cordova.plugins.qrcodejs.encode('TEXT_TYPE', identificador, (base64EncodedQRImage) => {
 			document.querySelector('#page_main').style.display = 'none';
 			document.querySelector('#qr').style.display = 'block';
+			document.querySelector('#jugadores').style.display = 'block';
 			const qr = document.querySelector('#qr');
 			qr.innerHTML="";
 			let el = document.createElement('p');
-			el.innerHTML +="Esperando a que se unan jugadores"
+			el.innerHTML +="Esperando a que se unan jugadores";
 			el.innerHTML += "<br></br>";
 			el.innerHTML += "<img class=imagen src='"+base64EncodedQRImage+"'/>";
 			el.innerHTML += "<br></br>";
-			el.innerHTML += "<button id='"+identificador+"' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Empezar </button>";
+			el.innerHTML += "<button id='empezarjuego' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Empezar </button>";
 			el.innerHTML += "<button id='cancelarqr' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Cancelar </button>";
 			qr.appendChild(el);
+
+
+			document.querySelector('#empezarjuego').addEventListener('click',function(){
+				firebase.database().ref("/juegos/"+identificador+"/jugadores/");
+				firebase.database().ref("/juegos/"+identificador).update(
+				{
+					iniciado: 1
+				});
+				document.querySelector('#page_main').style.display = 'none';
+				document.querySelector('#qr').style.display = 'none';
+				document.querySelector('#jugadores').style.display = 'none';
+				document.querySelector('#juego_en_curso').style.display = 'block';
+				document.querySelector('#tiempo_pregunta').style.display = 'block';
+				let preguntas = db.ref("/juegos/"+identificador+"/preguntas");
+				preguntas.once("value").then(function(querySnapshot) {
+  				querySnapshot.forEach(function(doc) {
+						preguntasarr.push(doc.val());
+						//jugar(doc.val());
+
+  				});
+				});
+				console.log(preguntasarr);
+				document.querySelector('#proxima_pregunta').style.display = 'block';
+				let juego = document.querySelector('#proxima_pregunta');
+				juego.innerHTML ="";
+				let p = document.createElement("p");
+				p.innerHTML += "<button id='proximapregunta' class='prpregunta margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Pregunta </button>";
+				juego.appendChild(p);
+				document.querySelector('#proximapregunta').addEventListener('click',preg);
+			});
+
+			function preg(){
+				document.querySelector('#proxima_pregunta').style.display = 'none';
+				document.querySelector('#respuesta_correcta').style.display = 'none';
+				console.log(preguntasarr);
+				jugar(preguntasarr[0]);
+				preguntasarr.shift();
+			}
+
+			function jugar(doc){
+				let juego = document.querySelector('#juego_en_curso');
+				document.querySelector('#juego_en_curso').style.display = 'block';
+				document.querySelector('#tiempo_pregunta').style.display = 'block';
+				juego.innerHTML ="";
+				let p = document.createElement("p");
+				p.innerHTML +="<h4>"+ doc.pregunta+"</h4>";
+				juego.appendChild(p);
+				start(doc.tiempo,doc);
+			}
+
+
+
+	function mostrarResultados(doc){
+
+				console.log("MostrandoResultados");
+				document.querySelector('#juego_en_curso').style.display = 'none';
+				document.querySelector('#tiempo_pregunta').style.display = 'none';
+				document.querySelector('#respuesta_correcta').style.display = 'block';
+				let respuesta_correcta = document.querySelector('#respuesta_correcta');
+				respuesta_correcta.innerHTML ="";
+				let parrafo = document.createElement("p");
+				parrafo.innerHTML +="RESPUESTA CORRECTA:   ";
+				parrafo.innerHTML +="<h4>"+doc.respuesta+"</h4>";
+				parrafo.innerHTML +="<br></br>";
+				parrafo.innerHTML +="CLASIFICACIÓN";
+				parrafo.innerHTML +="<br></br>";
+				let resultados = db.ref("/juegos/"+doc.juego+"/resultados");
+				resultados.once("value").then(function(querySnapshot) {
+					querySnapshot.forEach(function(doc) {
+						let puntos = doc.val();
+						parrafo.innerHTML += puntos.email+" ----- "+puntos.puntos+" puntos";
+						parrafo.innerHTML +="<br></br>";
+					});
+				});
+
+				respuesta_correcta.appendChild(parrafo);
+				if(preguntasarr.length>0){
+					document.querySelector('#proxima_pregunta').style.display = 'block';
+				}
+			}
+
+
+
+			let timer = null;
+  		function start(time, doc){
+				tiempo = time*1000;
+				console.log(tiempo);
+				let timediv = document.querySelector('#tiempo_pregunta');
+				timediv.innerHTML ="";
+				let p = document.createElement("p");
+				p.innerHTML +=  "Tiempo Restante:  " +tiempo/1000;
+				timediv.appendChild(p);
+    		timer = setInterval(()=>{
+					tiempo -= 1000;
+					let timediv = document.querySelector('#tiempo_pregunta');
+					timediv.innerHTML ="";
+					let p = document.createElement("p");
+					p.innerHTML += "Tiempo Restante:  " +tiempo/1000;
+					timediv.appendChild(p);
+					console.log(tiempo);
+      		if(tiempo == 0){
+						console.log("FIN")
+        		stop();
+						mostrarResultados(doc);
+      		}
+    	}, 1000);
+  	}
+
+
+
+
+  	function stop() {
+    	clearInterval(timer);
+    	timer = null;
+  	}
 
 			document.querySelector('#cancelarqr').addEventListener('click',function(){
 				firebase.database().ref("/juegos/"+identificador+"/jugadores/").remove();
 				document.querySelector('#page_main').style.display = 'block';
 				document.querySelector('#qr').style.display = 'none';
+				document.querySelector('#jugadores').style.display = 'none';
 
 			});
 			let jugadores_ref = db.ref("/juegos/"+identificador+"/jugadores/");
 			jugadores_ref.on('child_added',jugadores);
 			jugadores_ref.on('child_changed',jugadores);
-    
-    }, (err) => {
-    });
+			jugadores_ref.on('child_removed',borrarjugador);
+    	}, (err) => {
 
-
-
+    	});
 	}
+
+
 
 	function jugadores(child_snapshot, prev_child_key){
 		let data = child_snapshot.val();
-		const page_main = document.querySelector('#qr');
+		const page_main = document.querySelector('#jugadores');
+		page_main.innerHTML="";
 		if(data!=null){
 			let el = document.createElement('p');
 			el.innerHTML += data;
 			console.log(data);
 			page_main.appendChild(el)
 		}
-		
-		
+
+
+	}
+
+	function borrarjugador(child_snapshot, prev_child_key){
+		let data = child_snapshot.val();
+		const page_main = document.querySelector('#jugadores');
+		page_main.innerHTML="";
 	}
 
 	function removeTask(id){
@@ -255,7 +400,7 @@ document.addEventListener('deviceready',function(){
 	var select = document.getElementById('tipo_pregunta');
 		select.addEventListener('change',
   		function(){
-  			
+
 
     		var selectedOption = this.options[select.selectedIndex];
     		tipo_pregunta = selectedOption.value;
@@ -291,7 +436,7 @@ document.addEventListener('deviceready',function(){
 			el.innerHTML += "<br>";
 			el.innerHTML+="<br>";
 			el.innerHTML+="<button id='"+mid+"' class='bmod margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Modificar</button>";
-			
+
 			el.innerHTML+="<button id='"+rid+"' class='bremove margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' >Eliminar </button>";
 			el.innerHTML+="<br>";
 			el.innerHTML+="<br>";
@@ -366,8 +511,9 @@ document.addEventListener('deviceready',function(){
 	function rem_tareas(child_snapshot, prev_child_key){
 		let data = child_snapshot.val();
 		const page_main = document.querySelector('#page_main');
-		const newDiv = document.getElementById(data.referencia);
-		newDiv.innerHTML="";
+	/*	const newDiv = document.getElementById(data.referencia);
+		newDiv.innerHTML="";*/
+		const newDi = document.getElementById(data.referencia).style.display = 'none';
 	}
 
 
