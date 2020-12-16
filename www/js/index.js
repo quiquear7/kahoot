@@ -35,14 +35,19 @@ document.addEventListener('deviceready',function(){
 		var task_name = document.querySelector("#game_name").value;
 	//	var image = document.getElementById('file').value;
 		if(refmod==null){
-
+			console.log(ref);
 			firebase.database().ref("/juegos/"+ref).set(
 			{
     		user:user.email,
 				name:task_name,
 				referencia: ref,
-				iniciado: 0
 
+
+			});
+
+		firebase.database().ref("/juegos/"+ref+"/estado").set(
+			{
+    		iniciado: 0
 			});
 			ref = ref++;
 		}
@@ -122,40 +127,38 @@ document.addEventListener('deviceready',function(){
     	if(tipo_pregunta!="" && task_name !="" && respuesta.length > 0 && esnumero ==1 && espunto==1 ){
     		if(refmod==null){
 
-			firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name).set(
-			{
-				juego: identificador[1],
-				tipo: tipo_pregunta,
-				tiempo: tiempo,
-				puntos: puntos,
-				pregunta:task_name,
-				respuesta: respuesta
-				//imagen: reader.result
-			});
-		}
-		if(tipo_pregunta=="opciones"){
-    			firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name+"/opciones").set(
-			{
-			opcion_a: opcionA,
-			opcion_b: opcionB,
-			opcion_c: opcionC,
-			opcion_d: opcionD
-		});
-    	}
+					firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name).set({
+						juego: identificador[1],
+						tipo: tipo_pregunta,
+						tiempo: tiempo,
+						puntos: puntos,
+						pregunta:task_name,
+						respuesta: respuesta
+						//imagen: reader.result
+					});
+				}
+				if(tipo_pregunta=="opciones"){
+    			firebase.database().ref("/juegos/"+identificador[1]+"/preguntas/"+task_name+"/opciones").set({
+						opcion_a: opcionA,
+						opcion_b: opcionB,
+						opcion_c: opcionC,
+						opcion_d: opcionD
+					});
+    		}
 
-		document.querySelector('#preguntas').style.display = 'none';
-		document.querySelector('#page_main').style.display = 'block';
+				document.querySelector('#preguntas').style.display = 'none';
+				document.querySelector('#page_main').style.display = 'block';
     	}
     	else{
     		alert("Datos incorrectos");
     		document.querySelector('#preguntas').style.display = 'block';
-			document.querySelector('#page_main').style.display = 'none';
-			document.querySelector("#question").value = '';
-			document.querySelector("#tiempopregunta").value = '';
-			document.querySelector("#opcion_a").value = '';
-			document.querySelector("#opcion_b").value = '';
-			document.querySelector("#opcion_c").value = '';
-			document.querySelector("#opcion_d").value = '';
+				document.querySelector('#page_main').style.display = 'none';
+				document.querySelector("#question").value = '';
+				document.querySelector("#tiempopregunta").value = '';
+				document.querySelector("#opcion_a").value = '';
+				document.querySelector("#opcion_b").value = '';
+				document.querySelector("#opcion_c").value = '';
+				document.querySelector("#opcion_d").value = '';
     	}
 
 
@@ -165,22 +168,22 @@ document.addEventListener('deviceready',function(){
   		removeTask(event.target.id);
 	}
 	function manejadorMod(event) {
-		console.log("manejador");
+
   		mod(event.target.id);
 	}
 
 	function manejadorEmpezar(event) {
-		console.log("manejador");
+
   		Empezar(event.target.id);
 	}
 
 	function manejadorPregunta(event) {
-		console.log("manejador");
+
 			mostrar_preguntas(event.target.id);
 	}
 
 	function añadirPregunta(event) {
-		console.log("manejador");
+
 			pregunta(event.target.id);
 	}
 
@@ -194,7 +197,7 @@ document.addEventListener('deviceready',function(){
 		let pid = id;
 		el.innerHTML += "<br>"
 		el.innerHTML+="<button id='"+pid+"' class='p mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Añadir Pregunta </button>";
-		el.innerHTML += "<button id='cancelarpr' class='bempezar mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Cancelar </button>";
+		el.innerHTML += "<button id='cancelarpr' class='bempezar margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Cancelar </button>";
 
 
 
@@ -214,7 +217,7 @@ document.addEventListener('deviceready',function(){
 	function Empezar(id){
 		let refremove = id.split("e");
 		let identificador = refremove[1];
-
+		firebase.database().ref("/juegos/"+identificador+"/jugadores/").remove();
 		cordova.plugins.qrcodejs.encode('TEXT_TYPE', identificador, (base64EncodedQRImage) => {
 			document.querySelector('#page_main').style.display = 'none';
 			document.querySelector('#qr').style.display = 'block';
@@ -232,11 +235,7 @@ document.addEventListener('deviceready',function(){
 
 
 			document.querySelector('#empezarjuego').addEventListener('click',function(){
-				firebase.database().ref("/juegos/"+identificador+"/jugadores/");
-				firebase.database().ref("/juegos/"+identificador).update(
-				{
-					iniciado: 1
-				});
+
 				document.querySelector('#page_main').style.display = 'none';
 				document.querySelector('#qr').style.display = 'none';
 				document.querySelector('#jugadores').style.display = 'none';
@@ -246,11 +245,8 @@ document.addEventListener('deviceready',function(){
 				preguntas.once("value").then(function(querySnapshot) {
   				querySnapshot.forEach(function(doc) {
 						preguntasarr.push(doc.val());
-						//jugar(doc.val());
-
   				});
 				});
-				console.log(preguntasarr);
 				document.querySelector('#proxima_pregunta').style.display = 'block';
 				let juego = document.querySelector('#proxima_pregunta');
 				juego.innerHTML ="";
@@ -258,12 +254,28 @@ document.addEventListener('deviceready',function(){
 				p.innerHTML += "<button id='proximapregunta' class='prpregunta margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Pregunta </button>";
 				juego.appendChild(p);
 				document.querySelector('#proximapregunta').addEventListener('click',preg);
+
 			});
 
 			function preg(){
 				document.querySelector('#proxima_pregunta').style.display = 'none';
 				document.querySelector('#respuesta_correcta').style.display = 'none';
-				console.log(preguntasarr);
+				console.log(preguntasarr[0].tipo);
+				firebase.database().ref("/juegos/"+identificador+"/estado").update(
+				{
+					iniciado: 1
+				});
+				firebase.database().ref("/juegos/"+preguntasarr[0].juego+"/preguntaActual").set({
+					juego: preguntasarr[0].juego,
+					tipo: preguntasarr[0].tipo,
+					tiempo: preguntasarr[0].tiempo,
+					puntos: preguntasarr[0].puntos,
+					pregunta: preguntasarr[0].pregunta,
+					respuesta: preguntasarr[0].respuesta,
+					opciones: preguntasarr[0].opciones
+					//imagen: reader.result
+				});
+
 				jugar(preguntasarr[0]);
 				preguntasarr.shift();
 			}
@@ -282,8 +294,10 @@ document.addEventListener('deviceready',function(){
 
 
 	function mostrarResultados(doc){
-
-				console.log("MostrandoResultados");
+				firebase.database().ref("/juegos/"+identificador+"/estado").update(
+				{
+					iniciado: 0
+				});
 				document.querySelector('#juego_en_curso').style.display = 'none';
 				document.querySelector('#tiempo_pregunta').style.display = 'none';
 				document.querySelector('#respuesta_correcta').style.display = 'block';
@@ -315,10 +329,13 @@ document.addEventListener('deviceready',function(){
 			let timer = null;
   		function start(time, doc){
 				tiempo = time*1000;
-				console.log(tiempo);
 				let timediv = document.querySelector('#tiempo_pregunta');
 				timediv.innerHTML ="";
 				let p = document.createElement("p");
+				firebase.database().ref("/juegos/"+doc.juego+"/preguntaActual").update(
+				{
+					tiempo: tiempo
+				});
 				p.innerHTML +=  "Tiempo Restante:  " +tiempo/1000;
 				timediv.appendChild(p);
     		timer = setInterval(()=>{
@@ -326,11 +343,13 @@ document.addEventListener('deviceready',function(){
 					let timediv = document.querySelector('#tiempo_pregunta');
 					timediv.innerHTML ="";
 					let p = document.createElement("p");
+					firebase.database().ref("/juegos/"+doc.juego+"/preguntaActual").update(
+					{
+						tiempo: tiempo
+					});
 					p.innerHTML += "Tiempo Restante:  " +tiempo/1000;
 					timediv.appendChild(p);
-					console.log(tiempo);
       		if(tiempo == 0){
-						console.log("FIN")
         		stop();
 						mostrarResultados(doc);
       		}
@@ -370,7 +389,7 @@ document.addEventListener('deviceready',function(){
 		if(data!=null){
 			let el = document.createElement('p');
 			el.innerHTML += data;
-			console.log(data);
+
 			page_main.appendChild(el)
 		}
 
@@ -385,14 +404,14 @@ document.addEventListener('deviceready',function(){
 
 	function removeTask(id){
 		let refremove = id.split("r");
-		console.log(refremove);
+
 		firebase.database().ref("/juegos/"+refremove[1]).remove();
 		document.getElementById(refremove[1]).style.display = 'none';
 	}
 
 	function mod(id){
 		refmod = id.split("m");
-		console.log(refmod);
+
 		document.querySelector('#page_add_task').style.display = 'block';
 		document.querySelector('#page_main').style.display = 'none';
 	}
