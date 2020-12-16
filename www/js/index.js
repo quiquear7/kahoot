@@ -34,6 +34,7 @@ document.addEventListener('deviceready', function() {
     //var juegos_ref = db.ref("/juegos");
     var task_name = document.querySelector("#game_name").value;
     //	var image = document.getElementById('file').value;
+		let id = ref;
     if (refmod == null) {
       firebase.database().ref("/juegos/" + ref).set({
         user: user.email,
@@ -43,7 +44,7 @@ document.addEventListener('deviceready', function() {
 
       });
 
-      firebase.database().ref("/juegos/" + ref + "/estado").set({
+      firebase.database().ref("/juegos/" + id + "/estado").set({
         iniciado: 0
       });
       ref = ref++;
@@ -103,13 +104,14 @@ document.addEventListener('deviceready', function() {
 
   //  var oFReader = new FileReader();
     //oFReader.readAsDataURL();
-		let imagensrc = null;
+		/*let imagensrc = null;
 		if (document.getElementById("file").files[0]!=null){
 			imagensrc = URL.createObjectURL(document.getElementById("file").files[0]);
 			imagen = imagensrc.split("blob:");
 
-		}
-
+		}*/
+		var imagen = document.getElementById("file").files[0];
+		console.log(imagen);
     const input = document.getElementById('file');
     let tiempo = document.getElementById('tiempopregunta').value;
     let esnumero = 1;
@@ -127,7 +129,7 @@ document.addEventListener('deviceready', function() {
             puntos: puntos,
             pregunta: task_name,
             respuesta: respuesta,
-            imagen: imagen[1]
+            imagen: imagen.src
           });
         } else {
           firebase.database().ref("/juegos/" + identificador[1] + "/preguntas/" + task_name).set({
