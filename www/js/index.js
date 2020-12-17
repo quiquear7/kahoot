@@ -312,6 +312,10 @@ document.addEventListener('deviceready', function() {
         let juego = document.querySelector('#proxima_pregunta');
         juego.innerHTML = "";
         let p = document.createElement("p");
+        p.innerHTML += "<br></br>";
+        p.innerHTML += "<br></br>";
+        p.innerHTML += "<br></br>";
+
         p.innerHTML += "<button id='proximapregunta' class='prpregunta margen mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent' > Pregunta </button>";
         juego.appendChild(p);
         document.querySelector('#proximapregunta').addEventListener('click', preg);
