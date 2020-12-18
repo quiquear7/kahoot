@@ -298,8 +298,8 @@ document.addEventListener('deviceready', function() {
         document.querySelector('#page_main').style.display = 'none';
         document.querySelector('#qr').style.display = 'none';
         document.querySelector('#jugadores').style.display = 'none';
-        document.querySelector('#juego_en_curso').style.display = 'block';
-        document.querySelector('#tiempo_pregunta').style.display = 'block';
+        document.querySelector('#juego_en_curso').style.display = 'none';
+        document.querySelector('#tiempo_pregunta').style.display = 'none';
         let preguntas = db.ref("/juegos/" + identificador + "/preguntas");
         preguntas.once("value").then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
@@ -383,6 +383,7 @@ document.addEventListener('deviceready', function() {
     juego.appendChild(p);
     start(doc.tiempo, doc);
   }
+
   let idjuego = "";
   function mostrarResultados(doc) {
     firebase.database().ref("/juegos/" + doc.juego + "/estado").update({

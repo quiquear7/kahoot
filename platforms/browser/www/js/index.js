@@ -383,7 +383,8 @@ document.addEventListener('deviceready', function() {
     juego.appendChild(p);
     start(doc.tiempo, doc);
   }
-
+  
+  let idjuego = "";
   function mostrarResultados(doc) {
     firebase.database().ref("/juegos/" + doc.juego + "/estado").update({
       iniciado: 0
@@ -417,6 +418,7 @@ document.addEventListener('deviceready', function() {
     parrafo.innerHTML += "<br></br>";
     parrafo.innerHTML += "PUNTUACIÓN";
     parrafo.innerHTML += "<br></br>";
+    idjuego = doc.juego;
     let resultados = db.ref("/juegos/" + doc.juego + "/resultados");
     resultados.once("value").then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
@@ -431,14 +433,14 @@ document.addEventListener('deviceready', function() {
     if (preguntasarr.length > 0) {
       document.querySelector('#proxima_pregunta').style.display = 'block';
     } else {
-      firebase.database().ref("/juegos/" + doc.juego + "/finalizado").update({
-        finalizado: 1
-      });
       document.querySelector('#divinicio').style.display = 'block';
     }
   }
 
   document.querySelector('#inicio').addEventListener('click', function() {
+    firebase.database().ref("/juegos/" + idjuego + "/finalizado").update({
+      finalizado: 1
+    });
     document.querySelector('#preguntas').style.display = 'none';
     document.querySelector('#respuesta_correcta').style.display = 'none';
     document.querySelector('#divinicio').style.display = 'none';
